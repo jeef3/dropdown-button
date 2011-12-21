@@ -31,6 +31,8 @@
         return trivialReporter.specFilter(spec);
       };
 
+      jasmine.getFixtures().fixturesPath = "fixtures";
+
       var currentWindowOnload = window.onload;
 
       window.onload = function() {
