@@ -18,7 +18,7 @@ Usage
 
     $("#my-button").combobutton();
 
-Click events are triggered on the button element in the form of button:action. The action is taken from either:
+Click events are triggered on the button element and are namespacned to "combo", e.g.: button.combo. The action is passed as a parameter to the event handler.
 
   - The data-combo-button-action attribute,
   - The item id, or,
@@ -26,4 +26,4 @@ Click events are triggered on the button element in the form of button:action. T
 
 ##### Events
 
-    $("#my-button").on("click:option-1", /* do stuff */);
+    $("#my-button").on("click.combo", function (e, action) { /* do stuff */ });
