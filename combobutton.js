@@ -11,7 +11,7 @@
         
         var construct = function() {
             $button.on("click", _buttonClicked);
-            $options.on("click", "", _optionClicked);
+            $options.on("click", "li", _optionClicked);
             $(document).on("click", _documentClicked);
         };
 
@@ -31,11 +31,13 @@
         
         var _optionClicked = function(e) {
             var item = $(this),
-                action =  item.data("combo-button-action") ||
+                data = item.data("combo-button-value"),
+                value =  data || 
+                    data === 0 ? data : false ||
                     item.attr("id") ||
                     item.text().replace(/ /g, "-");
 
-            $button.trigger("click:" + action);
+            $button.trigger("click.combo", [ value ]);
             _this.hide();
         };
 

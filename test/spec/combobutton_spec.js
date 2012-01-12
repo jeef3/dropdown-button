@@ -7,14 +7,10 @@ describe("Combo Button", function() {
         loadFixtures("fixture.html");
         button = $("#button");
         options = button.next();
+        combobutton = new ComboButton(button[0]);
     });
 
     describe("Show/Hide", function() {
-
-        beforeEach(function() {
-            combobutton = new ComboButton(button[0]);
-        });
-
         it("should show the options on 'show'", function() {
             combobutton.show();
             expect(button.hasClass("options-visible")).toBeTruthy();
@@ -32,7 +28,7 @@ describe("Combo Button", function() {
 
         it("should hide when the user clicks an option", function() {
             button.click();
-            options.first().click();
+            options.children().first().click();
             expect(button.hasClass("options-visible")).toBeFalsy();
         });
 
@@ -45,6 +41,31 @@ describe("Combo Button", function() {
             button.click();
             $("body").click();
             expect(button.hasClass("options-visible")).toBeFalsy();
+        });
+    });
+    
+    describe("Values", function() {
+        var handler;
+        
+        beforeEach(function() {
+            handler = { 
+                e: null,
+                getE: function () { return handler.e; },
+                func: function (e, value) { handler.e = e; } 
+            };
+            spyOn(handler, "func").andCallThrough();
+        });
+        
+        it("should trigger a 'click.combo' event when an option is selected", function() {
+            button.on("click.combo", handler.func);
+            options.children().first().click();
+            expect(handler.func).toHaveBeenCalled();
+        });
+        
+        it("should accept '0' as a value", function() {
+            button.on("click.combo", handler.func);
+            options.find("[data-combo-button-value='0']").click();
+            expect(handler.func).toHaveBeenCalledWith(handler.getE(), 0);
         });
     });
 
