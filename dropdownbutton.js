@@ -1,13 +1,14 @@
 (function($) {
-    function ComboButton(element, options) {
+    function DropdownButton(element, options) {
         var _this = this,
             $button = $(element),
             $options = $button.next();
         
         var defaults = {
-            options: {}
-        };
-        var settings = $.extend({}, defaults, options);
+                options: {},
+                optionsVisibleClassName: "options-visible"
+            },
+            settings = $.extend({}, defaults, options);
         
         var construct = function() {
             $button.on("click", _buttonClicked);
@@ -17,32 +18,32 @@
 
         // Public Methods
         this.show = function() {
-            $button.addClass("options-visible");
+            $button.addClass(settings.optionsVisibleClassName);
         };
         
         this.hide = function() {
-            $button.removeClass("options-visible");
+            $button.removeClass(settings.optionsVisibleClassName);
         };
 
         // Private Methods
         var _buttonClicked = function(e) {
-            $button.toggleClass("options-visible", !$button.hasClass("options-visible"));
+            $button.toggleClass(settings.optionsVisibleClassName, !$button.hasClass(settings.optionsVisibleClassName));
         };
         
         var _optionClicked = function(e) {
             var item = $(this),
-                data = item.data("combo-button-value"),
+                data = item.data("value"),
                 value =  data || 
-                    data === 0 ? data : false ||
+                    (data === 0 ? data : false) ||
                     item.attr("id") ||
                     item.text().replace(/ /g, "-");
 
-            $button.trigger("click.combo", [ value ]);
+            $button.trigger("click.option", [ value ]);
             _this.hide();
         };
 
         var _documentClicked = function(e) {
-            if (!$button.hasClass("options-visible") ||
+            if (!$button.hasClass(settings.optionsVisibleClassName) ||
                     e.target === element ||
                     $.contains($options[0], e.target)) return;
 
@@ -53,15 +54,15 @@
     }
 
     // jQuery Plugin
-    $.fn.combobutton = function(options) {
+    $.fn.dropdownbutton = function(options) {
         return this.each(function() {
-            if (!$(this).data('combobutton')) {
-                var plugin = new ComboButton(this, options);
-                $(this).data('combobutton', plugin);
+            if (!$(this).data('dropdown-button')) {
+                var plugin = new DropdownButton(this, options);
+                $(this).data('dropdown-button', plugin);
             }
         });
     };
     
     // Export
-    window.ComboButton = ComboButton;
+    window.DropdownButton = DropdownButton;
 })(jQuery);
